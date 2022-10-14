@@ -1,0 +1,50 @@
+## @file
+##
+
+[Defines]
+  BASE_NAME                      = ZapNvme
+  FILE_GUID                      = c17a4437-1662-4495-b3e5-46287c9c4586
+  ENTRY_POINT                    = ShellCEntryLib
+  INF_VERSION                    = 0x00010006
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 1.0
+
+[Sources]
+  Lib.c
+  Zap.c
+  Main.c
+  HexDump.c
+  SaveGpt.c
+  NvmeDump.c
+  NvmeInfo.c
+  ProtocolIterator.c
+  BmGetNvmeDescription.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  ShellPkg/ShellPkg.dec
+
+[Protocols]
+  gEfiDiskIoProtocolGuid
+  gEfiBlockIoProtocolGuid
+  gEfiDiskInfoProtocolGuid
+  gEfiDevicePathProtocolGuid
+  gEfiNvmExpressPassThruProtocolGuid
+
+[Guids]
+  gEfiDiskInfoIdeInterfaceGuid
+  gEfiDiskInfoUsbInterfaceGuid
+  gEfiDiskInfoNvmeInterfaceGuid
+  gEfiDiskInfoScsiInterfaceGuid
+  gEfiDiskInfoAhciInterfaceGuid
+  gEfiDiskInfoSdMmcInterfaceGuid
+
+[LibraryClasses]
+  PciLib
+  UefiLib
+  UefiShellLib
+  ShellCEntryLib
+  #BUGBUG UefiBootManagerLib
+  HandleParsingLib  #BUGBUG
+  ShellCommandLib   #BUGBUG
