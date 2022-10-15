@@ -53,8 +53,8 @@ A UEFI shell utility that:
             # NASM version 2.15.05 compiled on DATE
 
     `gcc --version` <br>
-	> \# gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 <br>
-	    // By default the GCC version is 7.5 in Ubuntu-18.04 <br>
+	> \# gcc (Ubuntu 7.5.0-3ubuntu1\~18.04) 7.5.0 <br>
+    	// By default the GCC version is 7.5 in Ubuntu-18.04 <br>
         `sudo apt-get install g++-5 -y` <br>
         `sudo apt-get install gcc-5 -y` <br>
         `gcc --version` <br>
