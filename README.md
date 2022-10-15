@@ -112,3 +112,6 @@ exec qemu-system-x86_64
   -drive file=/path/to/nvme.img,if=none,id=D22 \
   -device nvme,drive=D22,serial=1234
 ```
+
+## Known limitations:
+1. Only Linux(Ubuntu 18.04) and Windows(VS2017) builds are tested.
