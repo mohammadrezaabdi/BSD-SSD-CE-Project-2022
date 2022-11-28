@@ -11,10 +11,11 @@ A UEFI shell utility that:
 2. git 2.25.0+
 3. [UDK/EDK2 code tree](https://github.com/tianocore/edk2) in following tags: edk2-stable20{1911, 2002, 2005, 2008}
 
-<!-- ## Usage of SSDDRM
+## Usage of SSDDRM
 0. Boot into the EFI Shell.<br>
 1. To get the NVME info including the serial number<br>
     `SSDDRM info`
+<!-- 
 2. To wipe out the GPT. The serial number can be the first 6 characters.<br>
     `SSDDRM zap Nvme_SSD_serial_number`<br>
     **WARNING: The specified NVME SSD's GUID Partition Tables would be wiped out !** -->
@@ -53,8 +54,8 @@ A UEFI shell utility that:
             # NASM version 2.15.05 compiled on DATE
 
     `gcc --version` <br>
-	> \# gcc (Ubuntu 7.5.0-3ubuntu1\~18.04) 7.5.0 <br>
-    	// By default the GCC version is 7.5 in Ubuntu-18.04 <br>
+	> \# gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 <br>
+	    // By default the GCC version is 7.5 in Ubuntu-18.04 <br>
         `sudo apt-get install g++-5 -y` <br>
         `sudo apt-get install gcc-5 -y` <br>
         `gcc --version` <br>
@@ -93,7 +94,7 @@ After you have built the project successfully, you should link the `efi` file in
 ```bash
 #!/bin/sh
 mkdir -p /tmp/qemu-hda/EFI/BOOT/
-ln -sf ./Build/HelloWorld/RELEASE_GCC5/X64/HelloWorld.efi /tmp/qemu-hda/EFI/BOOT/BOOTX64.EFI
+cp ./Build/SSDDRM/RELEASE_GCC5/X64/SSDDRM.efi /tmp/qemu-hda/EFI/BOOT/
 exec qemu-system-x86_64
 	-net none \        
 	-bios /usr/share/ovmf/OVMF.fd \
@@ -108,10 +109,7 @@ if you want to add a virtual hard drive, you can create the image using ‍`dd` 
 exec qemu-system-x86_64
 	-net none \        
 	-bios /usr/share/ovmf/OVMF.fd \
-  -drive file=fat:rw:/tmp/qemu-hda \
-  -drive file=/path/to/nvme.img,if=none,id=D22 \
-  -device nvme,drive=D22,serial=1234
+    -drive file=fat:rw:/tmp/qemu-hda \
+    -drive file=/path/to/nvme.img,if=none,id=D22 \
+    -device nvme,drive=D22,serial=1234
 ```
-
-## Known limitations:
-1. Only Linux(Ubuntu 18.04) and Windows(VS2017) builds are tested.
