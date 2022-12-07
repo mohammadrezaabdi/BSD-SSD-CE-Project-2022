@@ -11,11 +11,7 @@
 
 [Sources]
   Lib.c
-  Zap.c
   Main.c
-  HexDump.c
-  SaveGpt.c
-  NvmeDump.c
   NvmeInfo.c
   ProtocolIterator.c
   BmGetNvmeDescription.c
