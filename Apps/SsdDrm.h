@@ -1,32 +1,32 @@
 #pragma once
 
 #include <Uefi.h>
-#include <Library/BaseLib.h>
+// #include <Library/BaseLib.h>
 #include <Library/UefiLib.h>
 #include <Library/DebugLib.h>
 #include <Library/PrintLib.h>
 #include <Library/ShellLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/DevicePathLib.h>
-#include <Library/ShellCEntryLib.h>
+// #include <Library/ShellCEntryLib.h>
 #include <Library/ShellCommandLib.h>
 #include <Library/MemoryAllocationLib.h>
-#include <Library/UefiBootServicesTableLib.h>
-#include <Library/UefiRuntimeServicesTableLib.h>
+// #include <Library/UefiBootServicesTableLib.h>
+// #include <Library/UefiRuntimeServicesTableLib.h>
 
-#include <Include/Protocol/DiskIo.h>
-#include <Include/Protocol/DiskInfo.h>
-#include <Include/Protocol/DriverBinding.h>
-#include <Include/Protocol/ComponentName2.h>
+// #include <Include/Protocol/DiskIo.h>
+// #include <Include/Protocol/DiskInfo.h>
+// #include <Include/Protocol/DriverBinding.h>
+// #include <Include/Protocol/ComponentName2.h>
 
-#include <IndustryStandard/Atapi.h>
-#include <IndustryStandard/Scsi.h>
+// #include <IndustryStandard/Atapi.h>
+// #include <IndustryStandard/Scsi.h>
 #include <IndustryStandard/Nvme.h>
 
 #include <Protocol/BlockIo.h>
-#include <Protocol/DevicePath.h>
-#include <Protocol/EraseBlock.h>
-#include <Protocol/IdeControllerInit.h>
+// #include <Protocol/DevicePath.h>
+// #include <Protocol/EraseBlock.h>
+// #include <Protocol/IdeControllerInit.h>
 #include <Protocol/NvmExpressPassthru.h>
 
 // Accourding to NVM Express Documentation
