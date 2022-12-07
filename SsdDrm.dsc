@@ -1,6 +1,6 @@
 [Defines]
   BUILD_TARGETS                       = DEBUG|RELEASE
-  PLATFORM_NAME                       = ZapNvme
+  PLATFORM_NAME                       = SSDDRM
   PLATFORM_GUID                       = 2e6954eb-713d-4e59-bcbf-ea03ad35ebd1
   PLATFORM_VERSION                    = 0.1
   DSC_SPECIFICATION                   = 0x00010006
@@ -46,4 +46,4 @@
   ShellCommandLib|ShellPkg/Library/UefiShellCommandLib/UefiShellCommandLib.inf      #BUGBUG
 
 [Components]
-  Apps/ZapNvme.inf
+  Apps/SsdDrm.inf

@@ -15,7 +15,7 @@ command/data
 
 **/
 
-#include <ZapNvme.h>
+#include <SsdDrm.h>
 
 #include <Library/HandleParsingLib.h> //BUGBUG
 
@@ -38,7 +38,7 @@ VOID Usage(VOID)
          L"       HELP - This help message\n"
          L"\n"
          L"Open Source:\n"
-         L"   https://github.com/timotheuslin/ZapNvme.efi\n"
+         L"   https://github.com/mohammadrezaabdi/SSDDRM.efi\n"
          );
 
 }
