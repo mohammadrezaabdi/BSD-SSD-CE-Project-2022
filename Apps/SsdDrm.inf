@@ -20,6 +20,8 @@
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
   ShellPkg/ShellPkg.dec
+  CryptoPkg/CryptoPkg.dec
+  SecurityPkg/SecurityPkg.dec
 
 [Protocols]
   gEfiDiskIoProtocolGuid
@@ -27,6 +29,8 @@
   gEfiDiskInfoProtocolGuid
   gEfiDevicePathProtocolGuid
   gEfiNvmExpressPassThruProtocolGuid
+  gEfiHash2ServiceBindingProtocolGuid
+  gEfiHash2ProtocolGuid
 
 [Guids]
   gEfiDiskInfoIdeInterfaceGuid
@@ -35,6 +39,7 @@
   gEfiDiskInfoScsiInterfaceGuid
   gEfiDiskInfoAhciInterfaceGuid
   gEfiDiskInfoSdMmcInterfaceGuid
+  gEfiHashAlgorithmSha256Guid
 
 [LibraryClasses]
   PciLib

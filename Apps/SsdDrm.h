@@ -1,18 +1,19 @@
 #pragma once
 
 #include <Uefi.h>
-// #include <Library/BaseLib.h>
+#include <Library/BaseLib.h>
 #include <Library/UefiLib.h>
 #include <Library/DebugLib.h>
 #include <Library/PrintLib.h>
 #include <Library/ShellLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/DevicePathLib.h>
-// #include <Library/ShellCEntryLib.h>
+#include <Library/ShellCEntryLib.h>
 #include <Library/ShellCommandLib.h>
 #include <Library/MemoryAllocationLib.h>
-// #include <Library/UefiBootServicesTableLib.h>
-// #include <Library/UefiRuntimeServicesTableLib.h>
+#include <Library/UefiBootServicesTableLib.h>
+#include <Library/UefiRuntimeServicesTableLib.h>
+#include <Protocol/ServiceBinding.h>
 
 // #include <Include/Protocol/DiskIo.h>
 // #include <Include/Protocol/DiskInfo.h>
@@ -28,6 +29,8 @@
 // #include <Protocol/EraseBlock.h>
 // #include <Protocol/IdeControllerInit.h>
 #include <Protocol/NvmExpressPassthru.h>
+
+#include <Protocol/Hash2.h>
 
 // Accourding to NVM Express Documentation
 #define NVME_PRODUCT_MODEL_NUMBER_SIZE 40
