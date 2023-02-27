@@ -83,6 +83,14 @@ StrinCmp (
 
 CHAR16 *StrStrip(CHAR16 *src);
 
+VOID
+EFIAPI
+BufferNCpy(
+        IN UINT8 *Dst,
+        IN CONST UINT8 *Src,
+        IN CONST UINTN Length
+);
+
 INT64 NvmeInfo(VOID);
 
 #define BlkIo_Terminate -1
@@ -91,3 +99,22 @@ INT64 NvmeInfo(VOID);
 INT64 BlkIo_Iterator(INT64 index, EFI_HANDLE *Handle, EFI_BLOCK_IO_PROTOCOL **BlkIo);
 INT64 NVME_Iterator(INT64 index, EFI_BLOCK_IO_PROTOCOL **BlkIo, CHAR16 *Desc_Buffer, INT16 Desc_Max);
 CHAR16 *DescToMnSn(CHAR16 *Desc, CHAR16 **Sn);
+
+EFI_STATUS
+EFIAPI
+HashSetup(
+        OUT EFI_HASH2_PROTOCOL **CryptoProtocol,
+        OUT UINTN *HashCtxSize
+);
+
+EFI_STATUS
+EFIAPI
+HashInfo(
+        IN CHAR16 *Info,
+        IN UINTN DataSize,
+        IN EFI_HASH2_PROTOCOL *CryptoProtocol,
+        IN UINTN HashCtxSize,
+        IN OUT UINT8 *Hash
+);
+
+VOID PrintHash(UINT8 *Hash, UINTN HashCtxSize);

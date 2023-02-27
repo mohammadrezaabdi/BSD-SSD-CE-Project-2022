@@ -117,3 +117,17 @@ int isBlockEmpty(VOID *data, UINT64 size)
   return 1;
 }
 
+VOID
+EFIAPI
+BufferNCpy(
+        IN UINT8 *Dst,
+        IN CONST UINT8 *Src,
+        IN CONST UINTN Length
+) {
+    INTN i;
+
+    for (i = 0; i < Length; i++) {
+        Dst[i] = Src[i];
+    }
+}
+

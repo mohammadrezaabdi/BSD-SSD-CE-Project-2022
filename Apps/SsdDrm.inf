@@ -15,6 +15,7 @@
   NvmeInfo.c
   ProtocolIterator.c
   BmGetNvmeDescription.c
+  Hash.c
 
 [Packages]
   MdePkg/MdePkg.dec
