@@ -100,21 +100,22 @@ INT64 BlkIo_Iterator(INT64 index, EFI_HANDLE *Handle, EFI_BLOCK_IO_PROTOCOL **Bl
 INT64 NVME_Iterator(INT64 index, EFI_BLOCK_IO_PROTOCOL **BlkIo, CHAR16 *Desc_Buffer, INT16 Desc_Max);
 CHAR16 *DescToMnSn(CHAR16 *Desc, CHAR16 **Sn);
 
+#define MAX_HASH_CTX_SIZE 64
+
 EFI_STATUS
 EFIAPI
 HashSetup(
-        OUT EFI_HASH2_PROTOCOL **CryptoProtocol,
-        OUT UINTN *HashCtxSize
+        OUT EFI_HASH2_PROTOCOL **CryptoProtocol
 );
 
 EFI_STATUS
 EFIAPI
 HashInfo(
-        IN CHAR16 *Info,
-        IN UINTN DataSize,
-        IN EFI_HASH2_PROTOCOL *CryptoProtocol,
-        IN UINTN HashCtxSize,
-        IN OUT UINT8 *Hash
+        IN CONST CHAR16 *Info,
+        IN CONST EFI_HASH2_PROTOCOL *CryptoProtocol,
+        IN CONST EFI_GUID *HashAlgorithm,
+        OUT UINT8 *Hash,
+        OUT UINTN *HashCtxSize
 );
 
 VOID PrintHash(UINT8 *Hash, UINTN HashCtxSize);

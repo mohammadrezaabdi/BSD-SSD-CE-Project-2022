@@ -1,30 +1,36 @@
 //TODO: write documentation
 #include <SsdDrm.h>
 
-//TODO: make Hash Algorithm optional
 EFI_STATUS
 EFIAPI
 HashSetup(
-        OUT EFI_HASH2_PROTOCOL **CryptoProtocol,
-        OUT UINTN *HashCtxSize
+        OUT EFI_HASH2_PROTOCOL **CryptoProtocol
 ) {
-    EFI_SERVICE_BINDING_PROTOCOL *bindingProtocol = NULL;
+    EFI_SERVICE_BINDING_PROTOCOL *BindingProtocol = NULL;
     EFI_STATUS Status = EFI_SUCCESS;
     EFI_HANDLE * ChildHandle = NULL;
+
+    // check if there is hash2 protocol before
+    Status = gBS->LocateProtocol(
+            &gEfiHash2ProtocolGuid,
+            NULL,
+            (VOID **) CryptoProtocol
+    );
+    if (Status == EFI_SUCCESS && *CryptoProtocol != NULL) {
+        return Status;
+    }
 
     Status = gBS->LocateProtocol(
             &gEfiHash2ServiceBindingProtocolGuid,
             NULL,
-            (VOID **) &bindingProtocol
+            (VOID **) &BindingProtocol
     );
-    if (EFI_ERROR (Status) || bindingProtocol == NULL) {
+    if (EFI_ERROR (Status) || BindingProtocol == NULL) {
         Print(L"Error when locating Hash2 binding protocol: %r\n", Status);
         return EFI_ABORTED;
     }
 
-    //TODO: create child only once
-
-    Status = bindingProtocol->CreateChild(bindingProtocol, (VOID **) &ChildHandle);
+    Status = BindingProtocol->CreateChild(BindingProtocol, (VOID **) &ChildHandle);
     if (EFI_ERROR (Status) || ChildHandle == NULL) {
         Print(L"Error when building Hash2 child: %r\n", Status);
         return EFI_ABORTED;
@@ -40,33 +46,39 @@ HashSetup(
         return EFI_ABORTED;
     }
 
-    Status = (*CryptoProtocol)->GetHashSize(*CryptoProtocol, &gEfiHashAlgorithmSha256Guid, HashCtxSize);
-    if (EFI_ERROR (Status) || CryptoProtocol == NULL) {
-        Print(L"Error when finding sha256 context size : %r\n", Status);
-        return EFI_ABORTED;
-    }
-
     return Status;
 }
 
-//TODO: check Info size by ascii strlen
 //TODO: check If Hash is correct
 EFI_STATUS
 EFIAPI
 HashInfo(
-        IN CHAR16 *Info,
-        IN UINTN DataSize,
-        IN EFI_HASH2_PROTOCOL *CryptoProtocol,
-        IN UINTN HashCtxSize,
-        IN OUT UINT8 *Hash
+        IN CONST CHAR16 *Info,
+        IN CONST EFI_HASH2_PROTOCOL *CryptoProtocol,
+        IN CONST EFI_GUID *HashAlgorithm,
+        OUT UINT8 *Hash,
+        OUT UINTN *HashCtxSize
 ) {
     EFI_STATUS Status = EFI_SUCCESS;
     EFI_HASH2_OUTPUT *HashCtx;
-    HashCtx = AllocatePool(HashCtxSize);
+    UINTN DataSize;
 
-    Status = CryptoProtocol->HashInit(CryptoProtocol, &gEfiHashAlgorithmSha256Guid);
+    Status = CryptoProtocol->GetHashSize(CryptoProtocol, HashAlgorithm, HashCtxSize);
+    if (EFI_ERROR (Status) || CryptoProtocol == NULL) {
+        Print(L"Error when finding sha256 context size : %r\n", Status);
+        return EFI_ABORTED;
+    }
+    HashCtx = AllocatePool(*HashCtxSize);
+
+    Status = CryptoProtocol->HashInit(CryptoProtocol, HashAlgorithm);
     if (EFI_ERROR (Status)) {
         Print(L"Hash Init Failed: %r\n", Status);
+        return EFI_ABORTED;
+    }
+
+    DataSize = StrLen(Info);
+    if (DataSize <= 0) {
+        Print(L"Hash Info Is Empty.\n");
         return EFI_ABORTED;
     }
 
@@ -82,7 +94,7 @@ HashInfo(
         return EFI_ABORTED;
     }
 
-    BufferNCpy(Hash, HashCtx->Sha256Hash, HashCtxSize);
+    BufferNCpy(Hash, HashCtx->Sha256Hash, *HashCtxSize);
 
     SafeFreePool((VOID **) &HashCtx);
     return Status;
