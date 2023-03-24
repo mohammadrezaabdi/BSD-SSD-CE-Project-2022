@@ -16,6 +16,8 @@
   ProtocolIterator.c
   BmGetNvmeDescription.c
   Hash.c
+  DBFileController.c
+  FSFile.c
 
 [Packages]
   MdePkg/MdePkg.dec

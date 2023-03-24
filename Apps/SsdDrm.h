@@ -42,43 +42,44 @@ extern UINT8 Verbose_Level;
 
 // UefiBootManagerLib | MdeModulePkg/Library/UefiBootManagerLib/BmBootDescription.c
 CHAR16 *
-BmGetNvmeDescription (
-  IN EFI_HANDLE Handle
-  );
+BmGetNvmeDescription(
+        IN EFI_HANDLE Handle
+);
 
 // UefiBootManagerLib | MdeModulePkg/Library/UefiBootManagerLib/BmBootDescription.c
 CHAR16 *
-BmGetBootDescription (
-  IN EFI_HANDLE Handle
+BmGetBootDescription(
+        IN EFI_HANDLE Handle
 );
 
 VOID SafeFreePool(void **h);
+
 VOID SafeShellCloseFile(SHELL_FILE_HANDLE *sfh);
 
 int isBlockEmpty(VOID *data, UINT64 size);
 
 CHAR16 *
 EFIAPI
-StrUprS (
-  OUT CHAR16 *Destination,
-  IN  UINTN DestMax,
-  IN  CONST CHAR16 *Source,
-  OUT UINT8 *Truncated
+StrUprS(
+        OUT CHAR16 *Destination,
+        IN  UINTN DestMax,
+        IN  CONST CHAR16 *Source,
+        OUT UINT8 *Truncated
 );
 
 INTN
 EFIAPI
-StriCmp (
-  IN CONST CHAR16 *FirstString,
-  IN CONST CHAR16 *SecondString
+StriCmp(
+        IN CONST CHAR16 *FirstString,
+        IN CONST CHAR16 *SecondString
 );
 
 INTN
 EFIAPI
-StrinCmp (
-  IN CONST CHAR16 *FirstString,
-  IN CONST CHAR16 *SecondString,
-  IN UINTN Length
+StrinCmp(
+        IN CONST CHAR16 *FirstString,
+        IN CONST CHAR16 *SecondString,
+        IN UINTN Length
 );
 
 CHAR16 *StrStrip(CHAR16 *src);
@@ -93,11 +94,16 @@ BufferNCpy(
 
 INT64 NvmeInfo(VOID);
 
+EFI_STATUS DBAddNvme(CHAR16 *SSD_SN);
+
 #define BlkIo_Terminate -1
 #define BlkIo_Continue -2
 #define BlkIo_Error -3
+
 INT64 BlkIo_Iterator(INT64 index, EFI_HANDLE *Handle, EFI_BLOCK_IO_PROTOCOL **BlkIo);
+
 INT64 NVME_Iterator(INT64 index, EFI_BLOCK_IO_PROTOCOL **BlkIo, CHAR16 *Desc_Buffer, INT16 Desc_Max);
+
 CHAR16 *DescToMnSn(CHAR16 *Desc, CHAR16 **Sn);
 
 #define MAX_HASH_CTX_SIZE 64
@@ -119,3 +125,12 @@ HashInfo(
 );
 
 VOID PrintHash(UINT8 *Hash, UINTN HashCtxSize);
+
+#define DB_FILE_NAME L"\\EFI\\BOOT\\db"
+
+EFI_STATUS
+EFIAPI
+FOpen(
+        IN CHAR16 *FileName,
+        OUT EFI_FILE_PROTOCOL **DBfile
+);
