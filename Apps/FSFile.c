@@ -85,7 +85,7 @@ FWriteAtEnd(
     }
 
     // set position to the last in order to update the DB
-    Status = File->SetPosition(File, FSize - 1);
+    Status = File->SetPosition(File, FSize);
     if (EFI_ERROR (Status)) {
         Print(L"Error when Setting DB's cursor position: %r\n", Status);
         return EFI_ABORTED;
@@ -117,23 +117,23 @@ EFI_STATUS
 EFIAPI
 FFind(
         IN EFI_FILE_PROTOCOL *File,
-        IN UINTN *KeywordSize,
+        IN UINTN KeywordSize,
         IN VOID *Keyword
 ) {
     EFI_STATUS Status = EFI_SUCCESS;
     EFI_STATUS SearchStatus = EFI_NOT_FOUND;
     VOID *Buffer;
-    UINTN ReadSize = *KeywordSize;
+    UINTN ReadSize = KeywordSize;
 
-    Buffer = AllocateZeroPool(*KeywordSize);
+    Buffer = AllocateZeroPool(KeywordSize);
     if (Buffer == NULL) {
         Print(L"Error when Allocating memory for reading file.\n");
         return EFI_ABORTED;
     }
 
-    while (!EFI_ERROR (Status) && ReadSize == *KeywordSize) {
+    while (!EFI_ERROR (Status) && ReadSize == KeywordSize) {
         Status = File->Read(File, &ReadSize, Buffer);
-        if (ReadSize == *KeywordSize && BufferNCmp(Keyword, Buffer, ReadSize) == 0) {
+        if (ReadSize == KeywordSize && BufferNCmp(Keyword, Buffer, ReadSize) == 0) {
             SearchStatus = EFI_SUCCESS;
             break;
         }

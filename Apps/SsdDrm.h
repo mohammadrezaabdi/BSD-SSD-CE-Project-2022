@@ -155,6 +155,6 @@ EFI_STATUS
 EFIAPI
 FFind(
         IN EFI_FILE_PROTOCOL *File,
-        IN UINTN *KeywordSize,
+        IN UINTN KeywordSize,
         IN VOID *Keyword
 );

@@ -30,8 +30,16 @@ EFI_STATUS DBAddNvme(CHAR16 *SSD_SN) {
     for (i = 0;; i++) {
         EFI_BLOCK_IO_PROTOCOL *BlkIo;
         CHAR16 Desc[NVME_DESCRIPTION_SIZE + 1], *Sn, Sn_Shorthand[NVME_PRODUCT_SERIAL_NUMBER_SIZE + 1];
-
+        UINT8 HashedInfo[MAX_HASH_CTX_SIZE + 1];
+        UINTN HashCtxSize;
+        
         if ((i = NVME_Iterator(i, &BlkIo, Desc, NVME_DESCRIPTION_SIZE)) < 0) {
+            break;
+        }
+
+        Status = HashInfo(Desc, mCryptoProtocol, &gEfiHashAlgorithmSha256Guid, HashedInfo, &HashCtxSize);
+        if (EFI_ERROR (Status)) {
+            Print(L"Error when hashing description of SSD #%d: %r\n", NVME_Count, Status);
             break;
         }
 
@@ -43,18 +51,10 @@ EFI_STATUS DBAddNvme(CHAR16 *SSD_SN) {
         if (StrinCmp(SSD_SN, Sn_Shorthand, SN_Length) == 0) {
             Print(L"  Matched Serial Number : %s as %s\n", SSD_SN, Sn);
             NVME_SN_MATCHED++;
-            UINT8 HashedInfo[MAX_HASH_CTX_SIZE + 1];
-            UINTN HashCtxSize;
-
-            Status = HashInfo(Desc, mCryptoProtocol, &gEfiHashAlgorithmSha256Guid, HashedInfo, &HashCtxSize);
-            if (EFI_ERROR (Status)) {
-                Print(L"Error when hashing description of SSD #%d: %r\n", NVME_Count, Status);
-                break;
-            }
 
             //TODO: fix file updating corruption
 
-            Status = FFind(DBFile, &HashCtxSize, HashedInfo);
+            Status = FFind(DBFile, HashCtxSize, HashedInfo);
             if (Status == EFI_SUCCESS) {
                 Print(L"SSD has been already added to Database.\n");
                 break;

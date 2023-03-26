@@ -49,7 +49,6 @@ HashSetup(
     return Status;
 }
 
-//TODO: check If Hash is correct
 EFI_STATUS
 EFIAPI
 HashInfo(
@@ -82,10 +81,12 @@ HashInfo(
         return EFI_ABORTED;
     }
 
-    Status = CryptoProtocol->HashUpdate(CryptoProtocol, (UINT8 *) Info, DataSize);
-    if (EFI_ERROR (Status)) {
-        Print(L"Hash Update Failed: %r\n", Status);
-        return EFI_ABORTED;
+    for (UINTN i = 0; i < DataSize; i++){
+        Status = CryptoProtocol->HashUpdate(CryptoProtocol, (UINT8 *) &Info[i], 1);
+        if (EFI_ERROR (Status)) {
+            Print(L"Hash Update Failed: %r\n", Status);
+            return EFI_ABORTED;
+        }
     }
 
     Status = CryptoProtocol->HashFinal(CryptoProtocol, HashCtx);
