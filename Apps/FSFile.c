@@ -3,7 +3,7 @@
 EFI_STATUS
 EFIAPI
 FOpen(
-        IN CHAR16 * FileName,
+        IN CHAR16 *FileName,
         OUT EFI_FILE_PROTOCOL **DBfile
 ) {
     EFI_HANDLE * handles = NULL;
@@ -52,4 +52,93 @@ FOpen(
     }
 
     return Status;
+}
+
+EFI_STATUS
+EFIAPI
+FWriteAtEnd(
+        IN EFI_FILE_PROTOCOL *File,
+        IN UINTN *BufferSize,
+        IN VOID *Buffer
+) {
+    UINTN DB_Info_Length = 0;
+    EFI_FILE_INFO *DB_Info;
+    UINT64 FSize;
+    EFI_STATUS Status = EFI_SUCCESS;
+
+    // get file size
+    File->GetInfo(File, &gEfiFileInfoGuid, &DB_Info_Length, NULL);
+    DB_Info = AllocateZeroPool(DB_Info_Length);
+    Status = File->GetInfo(File, &gEfiFileInfoGuid, &DB_Info_Length, (VOID *) DB_Info);
+    if (EFI_ERROR (Status)) {
+        Print(L"Error when getting info of DB file: %r\n", Status);
+        return EFI_ABORTED;
+    }
+    FSize = DB_Info->FileSize;
+    SafeFreePool((VOID **) &DB_Info);
+
+    // save position
+    UINT64 StoredPosition;
+    Status = File->GetPosition(File, &StoredPosition);
+    if (EFI_ERROR (Status)) {
+        return Status;
+    }
+
+    // set position to the last in order to update the DB
+    Status = File->SetPosition(File, FSize - 1);
+    if (EFI_ERROR (Status)) {
+        Print(L"Error when Setting DB's cursor position: %r\n", Status);
+        return EFI_ABORTED;
+    }
+
+    Status = File->Write(File, BufferSize, Buffer);
+    if (EFI_ERROR (Status)) {
+        Print(L"Error when writing on DB: %r\n", Status);
+        return EFI_ABORTED;
+    }
+
+    // set position to the last in order to update the DB
+    Status = File->SetPosition(File, StoredPosition);
+    if (EFI_ERROR (Status)) {
+        Print(L"Error when Setting DB's cursor position: %r\n", Status);
+        return EFI_ABORTED;
+    }
+
+    Status = File->Flush(File);
+    if (EFI_ERROR (Status)) {
+        Print(L"Error when Flushing DB's file: %r\n", Status);
+        return EFI_ABORTED;
+    }
+
+    return Status;
+}
+
+EFI_STATUS
+EFIAPI
+FFind(
+        IN EFI_FILE_PROTOCOL *File,
+        IN UINTN *KeywordSize,
+        IN VOID *Keyword
+) {
+    EFI_STATUS Status = EFI_SUCCESS;
+    EFI_STATUS SearchStatus = EFI_NOT_FOUND;
+    VOID *Buffer;
+    UINTN ReadSize = *KeywordSize;
+
+    Buffer = AllocateZeroPool(*KeywordSize);
+    if (Buffer == NULL) {
+        Print(L"Error when Allocating memory for reading file.\n");
+        return EFI_ABORTED;
+    }
+
+    while (!EFI_ERROR (Status) && ReadSize == *KeywordSize) {
+        Status = File->Read(File, &ReadSize, Buffer);
+        if (ReadSize == *KeywordSize && BufferNCmp(Keyword, Buffer, ReadSize) == 0) {
+            SearchStatus = EFI_SUCCESS;
+            break;
+        }
+    }
+
+    SafeFreePool((VOID **) &Buffer);
+    return SearchStatus;
 }

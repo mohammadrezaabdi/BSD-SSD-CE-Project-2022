@@ -92,6 +92,14 @@ BufferNCpy(
         IN CONST UINTN Length
 );
 
+INTN
+EFIAPI
+BufferNCmp(
+        IN VOID *FirstBuffer,
+        IN VOID *SecondBuffer,
+        IN UINTN Length
+);
+
 INT64 NvmeInfo(VOID);
 
 EFI_STATUS DBAddNvme(CHAR16 *SSD_SN);
@@ -133,4 +141,20 @@ EFIAPI
 FOpen(
         IN CHAR16 *FileName,
         OUT EFI_FILE_PROTOCOL **DBfile
+);
+
+EFI_STATUS
+EFIAPI
+FWriteAtEnd(
+        IN EFI_FILE_PROTOCOL *File,
+        IN UINTN *BufferSize,
+        IN VOID *Buffer
+);
+
+EFI_STATUS
+EFIAPI
+FFind(
+        IN EFI_FILE_PROTOCOL *File,
+        IN UINTN *KeywordSize,
+        IN VOID *Keyword
 );
