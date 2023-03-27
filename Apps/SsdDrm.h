@@ -102,7 +102,7 @@ BufferNCmp(
 
 INT64 NvmeInfo(VOID);
 
-EFI_STATUS DBAddNvme(CHAR16 *SSD_SN);
+EFI_STATUS DBUpdate(CHAR16 *SSD_SN, BOOLEAN IsRemove);
 
 #define BlkIo_Terminate -1
 #define BlkIo_Continue -2
@@ -145,6 +145,15 @@ FOpen(
 
 EFI_STATUS
 EFIAPI
+FWriteAtPosition(
+        IN EFI_FILE_PROTOCOL *File,
+        IN UINT64 Position,
+        IN UINTN *BufferSize,
+        IN VOID *Buffer
+);
+
+EFI_STATUS
+EFIAPI
 FWriteAtEnd(
         IN EFI_FILE_PROTOCOL *File,
         IN UINTN *BufferSize,
@@ -156,5 +165,6 @@ EFIAPI
 FFind(
         IN EFI_FILE_PROTOCOL *File,
         IN UINTN KeywordSize,
-        IN VOID *Keyword
+        IN VOID *Keyword,
+        OUT UINT64 *FindPosition
 );

@@ -1,6 +1,6 @@
 #include <SsdDrm.h>
 
-EFI_STATUS DBAddNvme(CHAR16 *SSD_SN) {
+EFI_STATUS DBUpdate(CHAR16 *SSD_SN, BOOLEAN IsRemove) {
     INT64 i = 0;
     UINTN SN_Length = 0;
     UINT16 NVME_Count = 1;
@@ -32,7 +32,7 @@ EFI_STATUS DBAddNvme(CHAR16 *SSD_SN) {
         CHAR16 Desc[NVME_DESCRIPTION_SIZE + 1], *Sn, Sn_Shorthand[NVME_PRODUCT_SERIAL_NUMBER_SIZE + 1];
         UINT8 HashedInfo[MAX_HASH_CTX_SIZE + 1];
         UINTN HashCtxSize;
-        
+
         if ((i = NVME_Iterator(i, &BlkIo, Desc, NVME_DESCRIPTION_SIZE)) < 0) {
             break;
         }
@@ -52,20 +52,34 @@ EFI_STATUS DBAddNvme(CHAR16 *SSD_SN) {
             Print(L"  Matched Serial Number : %s as %s\n", SSD_SN, Sn);
             NVME_SN_MATCHED++;
 
-            //TODO: fix file updating corruption
-
-            Status = FFind(DBFile, HashCtxSize, HashedInfo);
-            if (Status == EFI_SUCCESS) {
+            UINT64 Position = 0;
+            Status = FFind(DBFile, HashCtxSize, HashedInfo, &Position);
+            if (!IsRemove && Status == EFI_SUCCESS) {
                 Print(L"SSD has been already added to Database.\n");
                 break;
-            }
-
-            Status = FWriteAtEnd(DBFile, &HashCtxSize, HashedInfo);
-            if (EFI_ERROR (Status)) {
-                Print(L"Error when updating Database File: %r\n", Status);
+            } else if (IsRemove && Status == EFI_NOT_FOUND) {
+                Print(L"SSD not Found in Database.\n");
                 break;
             }
-            Print(L"SSD added to Database Successfully.\n");
+
+            if (IsRemove) {
+                VOID *Buffer;
+                Buffer = AllocateZeroPool(HashCtxSize);
+                Status = FWriteAtPosition(DBFile, Position, &HashCtxSize, Buffer);
+                if (EFI_ERROR (Status)) {
+                    Print(L"Error when updating Database File: %r\n", Status);
+                    break;
+                }
+                SafeFreePool((VOID **) &Buffer);
+                Print(L"SSD removed from Database Successfully.\n");
+            } else {
+                Status = FWriteAtEnd(DBFile, &HashCtxSize, HashedInfo);
+                if (EFI_ERROR (Status)) {
+                    Print(L"Error when updating Database File: %r\n", Status);
+                    break;
+                }
+                Print(L"SSD added to Database Successfully.\n");
+            }
 
             break;
         }

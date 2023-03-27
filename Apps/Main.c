@@ -16,7 +16,6 @@ VOID Usage(VOID) {
           L"       INFO - The basic infomation from every detected NVME SSD\n"
           L"       ADD [sn] - Add the hash of selected drive from DB\n"
           L"       REMOVE [sn] - Remove the hash of selected drive\n"
-          L"       REMOVEALL - Clear DB\n"
           L"       HELP - This help message\n"
           L"\n"
           L"Open Source:\n"
@@ -41,18 +40,14 @@ ShellAppMain(
     if (argc > 1) {
         if (StriCmp(argv[1], L"INFO") == 0) {
             NvmeInfo();
-        } else if (StriCmp(argv[1], L"ADD") == 0) {
+        } else if (StriCmp(argv[1], L"ADD") == 0 || StriCmp(argv[1], L"REMOVE") == 0) {
             if (argc > 2) {
-                return DBAddNvme(argv[2]);
+                return DBUpdate(argv[2], (StriCmp(argv[1], L"REMOVE") == 0));
             } else {
                 Print(L"%s needs the NVME's serial number assigned.\n", argv[1]);
                 Usage();
                 return 1;
             }
-        } else if (StriCmp(argv[1], L"REMOVE") == 0) {
-            //remove hash of ssd
-        } else if (StriCmp(argv[1], L"REMOVEALL") == 0) {
-            //remove all non existed ssds from OS
         } else {
             Usage();
             return 0;
