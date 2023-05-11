@@ -33,7 +33,7 @@ INT64 BlkIo_Iterator(INT64 index, EFI_HANDLE *Handle, EFI_BLOCK_IO_PROTOCOL **Bl
                     &gEfiBlockIoProtocolGuid,
                     (VOID **) BlkIo
                     );
-    if (EFI_ERROR (Status) || (*BlkIo)->Media->LogicalPartition || (*BlkIo)->Media->RemovableMedia) {
+    if (EFI_ERROR (Status) || (*BlkIo)->Media->LogicalPartition) {
       continue;
     }
     *Handle = HandleBuffer[index];
@@ -57,9 +57,11 @@ INT64 NVME_Iterator(INT64 index, EFI_BLOCK_IO_PROTOCOL **BlkIo, CHAR16 *Desc_Buf
     if ((i = BlkIo_Iterator(i, &Handle, BlkIo)) < 0) {
       break;
     }
-    Description = BmGetNvmeDescription(Handle);
+
+    //TODO: remove UEFI from Description
+    Description = BmGetBootDescription(Handle);
     if (!Description) {
-      continue;
+        continue;
     }
     StrnCpy(Desc_Buffer, Description, Desc_Max);
     Desc_Buffer[Desc_Max-1] = L'\0';
@@ -79,12 +81,20 @@ CHAR16 *DescToMnSn(CHAR16 *Desc, CHAR16 **Sn)
         return NULL;
     }
 
-    Mn[NVME_PRODUCT_MODEL_NUMBER_SIZE] = L'\0';
-    Mn = StrStrip(Mn);  // Mn is not always equal to Desc after StrStrip().
+    UINTN LastSpaceIndex;
+    UINTN Index;
+    for (Index = 0; Desc[Index] != L'\0'; Index++) {
+        if (Desc[Index] == L' ') {
+            LastSpaceIndex = Index;
+        }
+    }
 
-    *Sn = Desc+NVME_PRODUCT_MODEL_NUMBER_SIZE+1;
-    (*Sn)[NVME_PRODUCT_SERIAL_NUMBER_SIZE] = L'\0';
-    *Sn = StrStrip(*Sn);
+    Mn[LastSpaceIndex] = L'\0';
+    // Mn = StrStrip(Mn);  // Mn is not always equal to Desc after StrStrip().
+
+    *Sn = Desc+LastSpaceIndex+1;
+    // (*Sn)[NVME_PRODUCT_SERIAL_NUMBER_SIZE] = L'\0';
+    // *Sn = StrStrip(*Sn);
 
     return Mn;
 }

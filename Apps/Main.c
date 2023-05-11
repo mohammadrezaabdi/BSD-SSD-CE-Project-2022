@@ -20,6 +20,7 @@ VOID Usage(VOID) {
           L"\n"
           L"Open Source:\n"
           L"   https://github.com/mohammadrezaabdi/SSDDRM.efi\n"
+          L"\n"
     );
 
 }

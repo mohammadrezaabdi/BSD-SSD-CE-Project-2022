@@ -14,7 +14,7 @@
   Main.c
   NvmeInfo.c
   ProtocolIterator.c
-  BmGetNvmeDescription.c
+  BmBootDescription.c
   Hash.c
   DBFileController.c
   FSFile.c

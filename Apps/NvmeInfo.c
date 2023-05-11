@@ -12,7 +12,7 @@ INT64 NvmeInfo(VOID) {
         return EFI_ABORTED;
     }
 
-    Print(L"NVME Storage\n");
+    Print(L"DISK Storage\n");
     for (i = 0;; i++) {
         EFI_BLOCK_IO_PROTOCOL *BlkIo;
         CHAR16 Desc[NVME_DESCRIPTION_SIZE + 1], *Mn, *Sn;

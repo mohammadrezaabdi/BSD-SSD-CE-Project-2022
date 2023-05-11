@@ -15,22 +15,23 @@
 #include <Library/UefiRuntimeServicesTableLib.h>
 #include <Protocol/ServiceBinding.h>
 
-// #include <Include/Protocol/DiskIo.h>
-// #include <Include/Protocol/DiskInfo.h>
-// #include <Include/Protocol/DriverBinding.h>
-// #include <Include/Protocol/ComponentName2.h>
+#include <Protocol/DiskIo.h>
+#include <Protocol/DiskInfo.h>
+#include <Protocol/DriverBinding.h>
+#include <Protocol/ComponentName2.h>
 
-// #include <IndustryStandard/Atapi.h>
-// #include <IndustryStandard/Scsi.h>
+#include <IndustryStandard/Atapi.h>
+#include <IndustryStandard/Scsi.h>
 #include <IndustryStandard/Nvme.h>
 
 #include <Protocol/BlockIo.h>
-// #include <Protocol/DevicePath.h>
-// #include <Protocol/EraseBlock.h>
-// #include <Protocol/IdeControllerInit.h>
+#include <Protocol/DevicePath.h>
+#include <Protocol/EraseBlock.h>
+#include <Protocol/IdeControllerInit.h>
 #include <Protocol/NvmExpressPassthru.h>
 
 #include <Protocol/Hash2.h>
+#include <Library/UefiBootManagerLib/InternalBm.h>
 
 // Accourding to NVM Express Documentation
 #define NVME_PRODUCT_MODEL_NUMBER_SIZE 40
@@ -39,18 +40,6 @@
 
 
 extern UINT8 Verbose_Level;
-
-// UefiBootManagerLib | MdeModulePkg/Library/UefiBootManagerLib/BmBootDescription.c
-CHAR16 *
-BmGetNvmeDescription(
-        IN EFI_HANDLE Handle
-);
-
-// UefiBootManagerLib | MdeModulePkg/Library/UefiBootManagerLib/BmBootDescription.c
-CHAR16 *
-BmGetBootDescription(
-        IN EFI_HANDLE Handle
-);
 
 VOID SafeFreePool(void **h);
 
@@ -134,7 +123,7 @@ HashInfo(
 
 VOID PrintHash(UINT8 *Hash, UINTN HashCtxSize);
 
-#define DB_FILE_NAME L"\\EFI\\BOOT\\db"
+#define DB_FILE_NAME L"\\db.bin"
 
 EFI_STATUS
 EFIAPI
