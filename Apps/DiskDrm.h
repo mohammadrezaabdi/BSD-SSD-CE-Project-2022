@@ -33,10 +33,9 @@
 #include <Protocol/Hash2.h>
 #include <Library/UefiBootManagerLib/InternalBm.h>
 
-// Accourding to NVM Express Documentation
-#define NVME_PRODUCT_MODEL_NUMBER_SIZE 40
-#define NVME_PRODUCT_SERIAL_NUMBER_SIZE 20
-#define NVME_DESCRIPTION_SIZE (NVME_PRODUCT_MODEL_NUMBER_SIZE+NVME_PRODUCT_SERIAL_NUMBER_SIZE+2)
+#define DISK_PRODUCT_MODEL_NUMBER_SIZE 40
+#define DISK_PRODUCT_SERIAL_NUMBER_SIZE 20
+#define DISK_DESCRIPTION_SIZE (DISK_PRODUCT_MODEL_NUMBER_SIZE + DISK_PRODUCT_SERIAL_NUMBER_SIZE + 2)
 
 CHAR16 *
 BmGetBootDescriptionMinimal (
@@ -46,19 +45,6 @@ BmGetBootDescriptionMinimal (
 extern UINT8 Verbose_Level;
 
 VOID SafeFreePool(void **h);
-
-VOID SafeShellCloseFile(SHELL_FILE_HANDLE *sfh);
-
-int isBlockEmpty(VOID *data, UINT64 size);
-
-CHAR16 *
-EFIAPI
-StrUprS(
-        OUT CHAR16 *Destination,
-        IN  UINTN DestMax,
-        IN  CONST CHAR16 *Source,
-        OUT UINT8 *Truncated
-);
 
 INTN
 EFIAPI
@@ -93,9 +79,9 @@ BufferNCmp(
         IN UINTN Length
 );
 
-INT64 NvmeInfo(VOID);
+INT64 DiskInfo(VOID);
 
-EFI_STATUS DBUpdate(CHAR16 *SSD_SN, BOOLEAN IsRemove);
+EFI_STATUS DBUpdate(CHAR16 *DiskN, BOOLEAN IsRemove);
 
 #define BlkIo_Terminate -1
 #define BlkIo_Continue -2
@@ -103,7 +89,7 @@ EFI_STATUS DBUpdate(CHAR16 *SSD_SN, BOOLEAN IsRemove);
 
 INT64 BlkIo_Iterator(INT64 index, EFI_HANDLE *Handle, EFI_BLOCK_IO_PROTOCOL **BlkIo);
 
-INT64 NVME_Iterator(INT64 index, EFI_BLOCK_IO_PROTOCOL **BlkIo, CHAR16 *Desc_Buffer, INT16 Desc_Max);
+INT64 DISK_Iterator(INT64 index, EFI_BLOCK_IO_PROTOCOL **BlkIo, CHAR16 *Desc_Buffer, INT16 Desc_Max);
 
 #define MAX_HASH_CTX_SIZE 64
 

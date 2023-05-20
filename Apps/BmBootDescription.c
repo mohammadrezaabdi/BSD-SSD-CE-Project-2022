@@ -9,7 +9,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 **/
 
-#include <SsdDrm.h>
+#include <DiskDrm.h>
 
 #define VENDOR_IDENTIFICATION_OFFSET     3
 #define VENDOR_IDENTIFICATION_LENGTH     8

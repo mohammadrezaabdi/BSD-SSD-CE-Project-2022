@@ -1,4 +1,4 @@
-#include <SsdDrm.h>
+#include <DiskDrm.h>
 
 EFI_STATUS
 EFIAPI

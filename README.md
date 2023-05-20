@@ -1,9 +1,9 @@
-SSDDRM.efi
+DISKDRM.efi
 ===
 A UEFI shell utility that:
-1. finds all SSD storage devices
+1. finds all DISK storage devices
 2. generate hash from their descriptions (like serial number, manufacturer, ...)
-3. disconnect any SSD storage from OS if its hash not found in local database.
+3. disconnect any DISK storage from OS if its hash not found in local database.
 
 
 ## Prerequisites:
@@ -11,15 +11,10 @@ A UEFI shell utility that:
 2. git 2.25.0+
 3. [UDK/EDK2 code tree](https://github.com/tianocore/edk2) in following tags: edk2-stable20{1911, 2002, 2005, 2008}
 
-## Usage of SSDDRM
+## Usage of DISKDRM
 0. Boot into the EFI Shell.<br>
-1. To get the NVME info including the serial number<br>
-    `SSDDRM info`
-<!-- 
-2. To wipe out the GPT. The serial number can be the first 6 characters.<br>
-    `SSDDRM zap Nvme_SSD_serial_number`<br>
-    **WARNING: The specified NVME SSD's GUID Partition Tables would be wiped out !** -->
-
+1. To get the Disk info including the serial number<br>
+    `DISKDRM info`
 
 ## Build using iPug:
 0. Install dependencies
@@ -78,23 +73,23 @@ A UEFI shell utility that:
 	> \# Python 3.6.9
 
 1. `pip3 install ipug --user --upgrade`
-2. `git-clone https://github.com/mohammadrezaabdi/SSDDRM.efi`
-3. Change directory to folder **SSDDRM.efi**.
+2. `git-clone https://github.com/mohammadrezaabdi/DISKDRM.efi`
+3. Change directory to folder **DISKDRM.efi**.
 4. (Optional) Edit `CODETREE` in `project.py` to specify where to place the downloaded source files of the UDK git repo or any other additional repos.
 5. To setup the EDK2 code base and build the BaseTools executables, run `ipug setup`.
 6. To build the code, run `ipug build` (iPug will then handle all the rest of remaining tedious works with the UDK code tree setup and the build process.)
-7. Browse to folder **Build/SSDDRM** for the build results.
+7. Browse to folder **Build/DISKDRM** for the build results.
 8. Browse to folder **Build/Conf** for CONF_PATH setting files.
 9. Run `ipug {clean, cleanall}` to clean (all) the intermediate files.
 
 ## Run inside UEFI Shell
 
-After you have built the project successfully, you should link the `efi` file in `./Build/SSDDRM/RELEASE_GCC5/X64/SSDDRM.efi` to BOOTX64.EFI file which will be placed in QEMU virtual VirtIO-BLK boot hard drive partition. for example, consider `start.sh` bash file like below:
+After you have built the project successfully, you should link the `efi` file in `./Build/DISKDRM/RELEASE_GCC5/X64/DISKDRM.efi` to BOOTX64.EFI file which will be placed in QEMU virtual VirtIO-BLK boot hard drive partition. for example, consider `start.sh` bash file like below:
 
 ```bash
 #!/bin/sh
 mkdir -p /tmp/qemu-hda/EFI/BOOT/
-cp ./Build/SSDDRM/RELEASE_GCC5/X64/SSDDRM.efi /tmp/qemu-hda/EFI/BOOT/
+cp ./Build/DISKDRM/RELEASE_GCC5/X64/DISKDRM.efi /tmp/qemu-hda/EFI/BOOT/
 exec qemu-system-x86_64
 	-net none \        
 	-bios /usr/share/ovmf/OVMF.fd \

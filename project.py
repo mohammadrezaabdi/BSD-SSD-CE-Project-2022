@@ -29,7 +29,7 @@ if __name__ == '__main__':
     import sys
     sys.dont_write_bytecode = True      # To inhibit the creation of .pyc file
 
-    PKG_DSC = 'SsdDrm.dsc'
+    PKG_DSC = 'DiskDrm.dsc'
     CMDX = " ".join(sys.argv[1:])
     IPUG_CMD = f"ipug -p {PKG_DSC} {CMDX}"
     print(IPUG_CMD)

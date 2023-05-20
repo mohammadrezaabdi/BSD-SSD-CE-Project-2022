@@ -1,4 +1,4 @@
-#include <SsdDrm.h>
+#include <DiskDrm.h>
 
 // Note: not thread-safe yet.
 INT64 BlkIo_Iterator(INT64 index, EFI_HANDLE *Handle, EFI_BLOCK_IO_PROTOCOL **BlkIo)
@@ -46,7 +46,7 @@ INT64 BlkIo_Iterator(INT64 index, EFI_HANDLE *Handle, EFI_BLOCK_IO_PROTOCOL **Bl
 
 
 // Note: not thread-safe yet.
-INT64 NVME_Iterator(INT64 index, EFI_BLOCK_IO_PROTOCOL **BlkIo, CHAR16 *Desc_Buffer, INT16 Desc_Max)
+INT64 DISK_Iterator(INT64 index, EFI_BLOCK_IO_PROTOCOL **BlkIo, CHAR16 *Desc_Buffer, INT16 Desc_Max)
 {
   INT64 i=0;
 

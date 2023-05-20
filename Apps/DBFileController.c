@@ -1,4 +1,4 @@
-#include <SsdDrm.h>
+#include <DiskDrm.h>
 
 EFI_STATUS DBUpdate(CHAR16 *DiskN, BOOLEAN IsRemove) {
     INT64 i = 0;
@@ -30,34 +30,34 @@ EFI_STATUS DBUpdate(CHAR16 *DiskN, BOOLEAN IsRemove) {
 
     for (i = 0;; i++) {
         EFI_BLOCK_IO_PROTOCOL *BlkIo;
-        CHAR16 Desc[NVME_DESCRIPTION_SIZE + 1];
+        CHAR16 Desc[DISK_DESCRIPTION_SIZE + 1];
         UINT8 HashedInfo[MAX_HASH_CTX_SIZE + 1];
         UINTN HashCtxSize;
 
-        if ((i = NVME_Iterator(i, &BlkIo, Desc, NVME_DESCRIPTION_SIZE)) < 0) {
+        if ((i = DISK_Iterator(i, &BlkIo, Desc, DISK_DESCRIPTION_SIZE)) < 0) {
             break;
         }
 
         Status = HashInfo(Desc, mCryptoProtocol, &gEfiHashAlgorithmSha256Guid, HashedInfo, &HashCtxSize);
         if (EFI_ERROR (Status)) {
-            Print(L"Error when hashing description of SSD #%d: %r\n", DiskCount, Status);
+            Print(L"Error when hashing description of DISK #%d: %r\n", DiskCount, Status);
             break;
         }
 
-        CHAR16 * NVMECountStr = AllocatePool(NLength + sizeof(CHAR16) + 1);
-        ASSERT (NVMECountStr != NULL);
-        UnicodeSPrint(NVMECountStr, NLength + sizeof(CHAR16) + 1, L"%d", DiskCount);
-        if (StrinCmp(DiskN, NVMECountStr, NLength) == 0) {
+        CHAR16 * DISKCountStr = AllocatePool(NLength + sizeof(CHAR16) + 1);
+        ASSERT (DISKCountStr != NULL);
+        UnicodeSPrint(DISKCountStr, NLength + sizeof(CHAR16) + 1, L"%d", DiskCount);
+        if (StrinCmp(DiskN, DISKCountStr, NLength) == 0) {
             Print(L"    Disk #%s Selected.\n", DiskN);
             DiskNMatched++;
 
             UINT64 Position = 0;
             Status = FFind(DBFile, HashCtxSize, HashedInfo, &Position);
             if (!IsRemove && Status == EFI_SUCCESS) {
-                Print(L"SSD has been already added to Database.\n");
+                Print(L"DISK has been already added to Database.\n");
                 break;
             } else if (IsRemove && Status == EFI_NOT_FOUND) {
-                Print(L"SSD not Found in Database.\n");
+                Print(L"DISK not Found in Database.\n");
                 break;
             }
 
@@ -70,20 +70,20 @@ EFI_STATUS DBUpdate(CHAR16 *DiskN, BOOLEAN IsRemove) {
                     break;
                 }
                 SafeFreePool((VOID **) &Buffer);
-                Print(L"SSD removed from Database Successfully.\n");
+                Print(L"DISK removed from Database Successfully.\n");
             } else {
                 Status = FWriteAtEnd(DBFile, &HashCtxSize, HashedInfo);
                 if (EFI_ERROR (Status)) {
                     Print(L"Error when updating Database File: %r\n", Status);
                     break;
                 }
-                Print(L"SSD added to Database Successfully.\n");
+                Print(L"DISK added to Database Successfully.\n");
             }
 
             break;
         }
 
-        SafeFreePool((VOID **) &NVMECountStr);
+        SafeFreePool((VOID **) &DISKCountStr);
         DiskCount++;
     }
 

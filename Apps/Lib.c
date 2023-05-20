@@ -1,5 +1,5 @@
 
-#include <SsdDrm.h>
+#include <DiskDrm.h>
 
 VOID SafeFreePool(void **h) {
     if (*h) {
@@ -7,35 +7,6 @@ VOID SafeFreePool(void **h) {
         *h = NULL;
     }
 }
-
-VOID SafeShellCloseFile(SHELL_FILE_HANDLE *sfh) {
-    if (*sfh != NULL) {
-        ShellCloseFile(sfh);
-        *sfh = NULL;
-    }
-}
-
-CHAR16 *
-EFIAPI
-StrUprS(
-        OUT CHAR16 *Destination,
-        IN  UINTN DestMax,
-        IN  CONST CHAR16 *Source,
-        OUT UINT8 *Truncated
-) {
-    CHAR16 * Destination0 = Destination;
-
-    while (*Destination && (Destination < (Destination + DestMax))) {
-        *Destination = CharToUpper(*Source);
-        Destination++;
-        Source++;
-    }
-    *Destination = L'\0';
-    *Truncated = (*Source == *Destination);
-
-    return Destination0;
-}
-
 
 INTN
 EFIAPI
@@ -97,19 +68,6 @@ CHAR16 *StrStrip(CHAR16 *src) {
 }
 
 
-int isBlockEmpty(VOID *data, UINT64 size) {
-    UINT8 * d = (UINT8 *) data;
-    UINT8 d0 = *d;
-    UINT64 i;
-
-    for (i = 1; i < size; i++) {
-        if (d0 != *d) {
-            return 0;
-        }
-    }
-    return 1;
-}
-
 VOID
 EFIAPI
 BufferNCpy(
@@ -123,6 +81,7 @@ BufferNCpy(
         Dst[i] = Src[i];
     }
 }
+
 
 INTN
 EFIAPI
