@@ -636,11 +636,15 @@ BmGetNvmeDescription (
     for (Index = 0; Index < ARRAY_SIZE (ControllerData.Sn); Index++) {
       *(Char++) = (CHAR16) ControllerData.Sn[Index];
     }
-    *(Char++) = L' ';
-    UnicodeValueToStringS (
-      Char, sizeof (CHAR16) * (MAXIMUM_VALUE_CHARACTERS + 1),
-      0, DevicePath.NvmeNamespace->NamespaceId, 0
-      );
+    //
+    // In Order to return only Model + SerialNumber
+    // We Comment this section from original function
+    //
+    // *(Char++) = L' ';
+    // UnicodeValueToStringS (
+    //   Char, sizeof (CHAR16) * (MAXIMUM_VALUE_CHARACTERS + 1),
+    //   0, DevicePath.NvmeNamespace->NamespaceId, 0
+    //   );
     BmEliminateExtraSpaces (Description);
   }
 
@@ -874,4 +878,30 @@ BmMakeBootOptionDescriptionUnique (
   }
 
   FreePool (Visited);
+}
+
+/**
+ * New Function *
+  Return the minimal boot description for the controller (model number + serial number).
+
+  @param Handle                Controller handle.
+
+  @return  The description string.
+**/
+CHAR16 *
+BmGetBootDescriptionMinimal (
+  IN EFI_HANDLE                  Handle
+  )
+{
+  CHAR16                         *Description = NULL;
+  UINTN                          Index;
+
+  for (Index = 0; Index < ARRAY_SIZE (mBmBootDescriptionHandlers); Index++) {
+    Description = mBmBootDescriptionHandlers[Index] (Handle);
+    if (Description != NULL) {
+      return Description;
+    }
+  }
+
+  return NULL;
 }

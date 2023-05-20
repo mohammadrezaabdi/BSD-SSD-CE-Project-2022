@@ -58,8 +58,7 @@ INT64 NVME_Iterator(INT64 index, EFI_BLOCK_IO_PROTOCOL **BlkIo, CHAR16 *Desc_Buf
       break;
     }
 
-    //TODO: remove UEFI from Description
-    Description = BmGetBootDescription(Handle);
+    Description = BmGetBootDescriptionMinimal(Handle);
     if (!Description) {
         continue;
     }
