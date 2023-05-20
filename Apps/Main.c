@@ -13,13 +13,14 @@ VOID Usage(VOID) {
     Print(L"Usage: \n"
           L"SSDDRM [arg1 [arg2 ...]] \n"
           L"   arg: \n"
-          L"       INFO - The basic infomation from every detected NVME SSD\n"
-          L"       ADD [sn] - Add the hash of selected drive from DB\n"
-          L"       REMOVE [sn] - Remove the hash of selected drive\n"
+          L"       INFO - The basic infomation from every detected DISK\n"
+          L"       ADD [#Number] - Add the hash of selected drive to DB\n"
+          L"       REMOVE [#Number] - Remove the hash of selected drive from DB\n"
           L"       HELP - This help message\n"
           L"\n"
           L"Open Source:\n"
           L"   https://github.com/mohammadrezaabdi/SSDDRM.efi\n"
+          L"\n"
           L"\n"
     );
 

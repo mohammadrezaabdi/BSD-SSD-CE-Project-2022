@@ -15,7 +15,7 @@ INT64 NvmeInfo(VOID) {
     Print(L"DISK Storage\n");
     for (i = 0;; i++) {
         EFI_BLOCK_IO_PROTOCOL *BlkIo;
-        CHAR16 Desc[NVME_DESCRIPTION_SIZE + 1], *Mn, *Sn;
+        CHAR16 Desc[NVME_DESCRIPTION_SIZE + 1];
         UINT8 HashedInfo[MAX_HASH_CTX_SIZE + 1];
         UINTN HashCtxSize;
 
@@ -29,10 +29,8 @@ INT64 NvmeInfo(VOID) {
             return EFI_ABORTED;
         }
 
-        Print(L"  #%d:\n", NVME_Count);
-        Mn = DescToMnSn(Desc, &Sn);
-        Print(L"  Model  : %s\n", Mn);
-        Print(L"  Serial : %s\n", Sn);
+        Print(L"  DISK #%d:\n", NVME_Count);
+        Print(L"  Description  : %s\n", Desc);
         Print(L"  Size : %d blocks = %ld bytes\n", BlkIo->Media->LastBlock + 1,
               (BlkIo->Media->LastBlock + 1) * BlkIo->Media->BlockSize);
         Print(L"  SHA256 : ");

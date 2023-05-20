@@ -101,8 +101,6 @@ INT64 BlkIo_Iterator(INT64 index, EFI_HANDLE *Handle, EFI_BLOCK_IO_PROTOCOL **Bl
 
 INT64 NVME_Iterator(INT64 index, EFI_BLOCK_IO_PROTOCOL **BlkIo, CHAR16 *Desc_Buffer, INT16 Desc_Max);
 
-CHAR16 *DescToMnSn(CHAR16 *Desc, CHAR16 **Sn);
-
 #define MAX_HASH_CTX_SIZE 64
 
 EFI_STATUS

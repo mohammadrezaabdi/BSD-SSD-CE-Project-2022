@@ -1,10 +1,10 @@
 #include <SsdDrm.h>
 
-EFI_STATUS DBUpdate(CHAR16 *SSD_SN, BOOLEAN IsRemove) {
+EFI_STATUS DBUpdate(CHAR16 *DiskN, BOOLEAN IsRemove) {
     INT64 i = 0;
-    UINTN SN_Length = 0;
-    UINT16 NVME_Count = 1;
-    INT16 NVME_SN_MATCHED = 0;
+    UINTN NLength = 0;
+    UINTN DiskCount = 1;
+    INT16 DiskNMatched = 0;
     EFI_HASH2_PROTOCOL *mCryptoProtocol;
     EFI_FILE_PROTOCOL * DBFile;
     EFI_STATUS Status;
@@ -15,9 +15,10 @@ EFI_STATUS DBUpdate(CHAR16 *SSD_SN, BOOLEAN IsRemove) {
         return EFI_ABORTED;
     }
 
-    SN_Length = StrLen(SSD_SN);
-    if (SN_Length <= 0) {
-        Print(L"SSD serial number is Empty.\n");
+    DiskN = StrStrip(DiskN);
+    NLength = StrLen(DiskN);
+    if (NLength <= 0) {
+        Print(L"Invalid Option.\n");
         return EFI_ABORTED;
     }
 
@@ -29,7 +30,7 @@ EFI_STATUS DBUpdate(CHAR16 *SSD_SN, BOOLEAN IsRemove) {
 
     for (i = 0;; i++) {
         EFI_BLOCK_IO_PROTOCOL *BlkIo;
-        CHAR16 Desc[NVME_DESCRIPTION_SIZE + 1], *Sn, Sn_Shorthand[NVME_PRODUCT_SERIAL_NUMBER_SIZE + 1];
+        CHAR16 Desc[NVME_DESCRIPTION_SIZE + 1];
         UINT8 HashedInfo[MAX_HASH_CTX_SIZE + 1];
         UINTN HashCtxSize;
 
@@ -39,18 +40,16 @@ EFI_STATUS DBUpdate(CHAR16 *SSD_SN, BOOLEAN IsRemove) {
 
         Status = HashInfo(Desc, mCryptoProtocol, &gEfiHashAlgorithmSha256Guid, HashedInfo, &HashCtxSize);
         if (EFI_ERROR (Status)) {
-            Print(L"Error when hashing description of SSD #%d: %r\n", NVME_Count, Status);
+            Print(L"Error when hashing description of SSD #%d: %r\n", DiskCount, Status);
             break;
         }
 
-        DescToMnSn(Desc, &Sn);
-        StrnCpy(Sn_Shorthand, Sn, SN_Length);
-        Print(L"Storage %2d - Serial Number : %s \n", NVME_Count, Sn);
-        Print(L"  Serial Number Shorthand  : %s \n", Sn_Shorthand);
-
-        if (StrinCmp(SSD_SN, Sn_Shorthand, SN_Length) == 0) {
-            Print(L"  Matched Serial Number : %s as %s\n", SSD_SN, Sn);
-            NVME_SN_MATCHED++;
+        CHAR16 * NVMECountStr = AllocatePool(NLength + sizeof(CHAR16) + 1);
+        ASSERT (NVMECountStr != NULL);
+        UnicodeSPrint(NVMECountStr, NLength + sizeof(CHAR16) + 1, L"%d", DiskCount);
+        if (StrinCmp(DiskN, NVMECountStr, NLength) == 0) {
+            Print(L"    Disk #%s Selected.\n", DiskN);
+            DiskNMatched++;
 
             UINT64 Position = 0;
             Status = FFind(DBFile, HashCtxSize, HashedInfo, &Position);
@@ -84,7 +83,8 @@ EFI_STATUS DBUpdate(CHAR16 *SSD_SN, BOOLEAN IsRemove) {
             break;
         }
 
-        NVME_Count++;
+        SafeFreePool((VOID **) &NVMECountStr);
+        DiskCount++;
     }
 
     Status = DBFile->Close(DBFile);
@@ -93,8 +93,8 @@ EFI_STATUS DBUpdate(CHAR16 *SSD_SN, BOOLEAN IsRemove) {
         return EFI_ABORTED;
     }
 
-    if (!NVME_SN_MATCHED) {
-        Print(L"  No (partial) match for NVME storage with serial number: %s.\n", SSD_SN);
+    if (!DiskNMatched) {
+        Print(L"  invalid option: %s.\n", DiskN);
     }
-    return NVME_SN_MATCHED ? 0 : EFI_NOT_FOUND;
+    return DiskNMatched ? 0 : EFI_NOT_FOUND;
 }

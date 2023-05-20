@@ -71,30 +71,3 @@ INT64 NVME_Iterator(INT64 index, EFI_BLOCK_IO_PROTOCOL **BlkIo, CHAR16 *Desc_Buf
   }
   return i;
 }
-
-
-CHAR16 *DescToMnSn(CHAR16 *Desc, CHAR16 **Sn)
-{
-    CHAR16 *Mn = Desc;
-
-    if (!Sn) {
-        return NULL;
-    }
-
-    UINTN LastSpaceIndex;
-    UINTN Index;
-    for (Index = 0; Desc[Index] != L'\0'; Index++) {
-        if (Desc[Index] == L' ') {
-            LastSpaceIndex = Index;
-        }
-    }
-
-    Mn[LastSpaceIndex] = L'\0';
-    // Mn = StrStrip(Mn);  // Mn is not always equal to Desc after StrStrip().
-
-    *Sn = Desc+LastSpaceIndex+1;
-    // (*Sn)[NVME_PRODUCT_SERIAL_NUMBER_SIZE] = L'\0';
-    // *Sn = StrStrip(*Sn);
-
-    return Mn;
-}
