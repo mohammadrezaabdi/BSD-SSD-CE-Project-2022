@@ -44,14 +44,13 @@ FOpen(
                 DBfile,
                 FileName,
                 EFI_FILE_MODE_CREATE | EFI_FILE_MODE_WRITE | EFI_FILE_MODE_READ,
-                0);
-        if (EFI_ERROR(Status)) {
-            Print(L"Error when opening DB file: %r\n", Status);
-            return BlkIo_Error;
+                EFI_FILE_SYSTEM);
+        if (DBfile != NULL){
+            return Status;
         }
     }
 
-    return Status;
+    return EFI_NOT_FOUND;
 }
 
 EFI_STATUS
